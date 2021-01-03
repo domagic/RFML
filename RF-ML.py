@@ -101,23 +101,13 @@ def get_feature_ranking(W):
 if __name__ == "__main__":
     import os
 
-    dataset_name = 'science'
-    file = os.path.join(os.path.abspath('..'), 'dataset', dataset_name, dataset_name + '.mat')
+    dataset_name = 'image'
+    file = os.path.join(os.path.abspath('.'), dataset_name + '.mat')
     dataset = loadmat(file)
     X_all = dataset['data']
     Y_all = dataset['target']
 
-    indices_file = os.path.join(os.path.abspath('..'), 'dataset', dataset_name, dataset_name + '_10cv_indices.mat')
-    cv_indices = loadmat(indices_file)['indices']
-    cv_indices = cv_indices.astype(np.int).reshape(cv_indices.shape[0], )
-    
-    k_folds = 10
-    for fold in range(1, k_folds + 1):
-        print(dataset_name + '\t:\ttraining is processing for fold ' + str(fold))
-        X_train = X_all[cv_indices == fold]
-        Y_train = Y_all[cv_indices == fold]
-        weight = rfml(X_train, Y_train, c=2 * X_train.shape[0], k=5)
-        feature_ranking = get_feature_ranking(weight)
-    
-        result_file = os.path.join(os.path.abspath('..'), 'fs', 'RFML', dataset_name + '_fold_' + str(fold) + '.mat')
-        savemat(result_file, mdict={'indices': feature_ranking})
+    weight = rfml(X_all, Y_all, c=2 * X_all.shape[0], k=5)
+    feature_ranking = get_feature_ranking(weight)
+    print(feature_ranking)
+
